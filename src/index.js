@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { ButtonToolbar, MenuItem, DropdownButton } from 'react-bootstrap';
+import { ButtonToolbar } from 'react-bootstrap';
 
 class Main extends React.Component {
     constructor() {
@@ -49,9 +49,36 @@ class Main extends React.Component {
         clearInterval(this.intervalId);
     }
 
+    slow = () => {
+        this.speed = 1000;
+        this.start();
+	}
+
+	fast = () => {
+        this.speed = 100;
+        this.start();
+    }
+    
+    clear = () => {
+        var grid = Array(this.rows).fill().map(() => Array(this.cols).fill(false));
+        
+        this.setState({
+            gridFull: grid,
+            iteration: 0
+		});
+    }
+    
+    gridSize = (cols, rows) => {
+        this.cols = cols;
+        this.rows = rows;
+        
+        this.clear();
+	}
+
     play = () => {
         let gridCopy = this.state.gridFull;
         let gridCopy2 = cloneArray(this.state.gridFull);
+
         for(var i = 0; i < this.rows; i++) {
             for(var j = 0; j < this.cols; j++) {
                 let count = 0;
@@ -101,6 +128,11 @@ class Main extends React.Component {
         });
     }
 
+    componentDidMount() {
+        this.fill();
+        this.start();
+    }
+
     render() {
         return(
             <div>
@@ -111,6 +143,15 @@ class Main extends React.Component {
                     rows = {this.rows}
                     cols = {this.cols}
                     selectBox = {this.selectBox}
+                />
+                <Buttons
+                    start = {this.start}
+                    pause = {this.pause}
+                    slow = {this.slow}
+                    fast = {this.fast}
+                    clear = {this.clear}
+                    fill = {this.fill}
+                    gridSize = {this.gridSize}
                 />
             </div>
         );
@@ -162,6 +203,23 @@ class Box extends React.Component {
                 onClick = {this.selectBox}
             />
         );
+    }
+}
+
+class Buttons extends React.Component {
+    render() {
+        return (
+            <div className = "center">
+                <ButtonToolbar>
+                    <button className = "btn btn-default" onClick = {this.props.start}>Start</button>
+                    <button className = "btn btn-default" onClick = {this.props.pause}>Pause</button>
+                    <button className = "btn btn-default" onClick = {this.props.clear}>Clear</button>
+                    <button className = "btn btn-default" onClick = {this.props.slow}>Slow</button>
+                    <button className = "btn btn-default" onClick = {this.props.fast}>Fast</button>
+                    <button className = "btn btn-default" onClick = {this.props.fill}>Fill</button>
+                </ButtonToolbar>
+            </div>
+        )
     }
 }
 
