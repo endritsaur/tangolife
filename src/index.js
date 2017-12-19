@@ -65,7 +65,7 @@ class Main extends React.Component {
         this.setState({
             gridFull: grid,
             iteration: 0
-		});
+        });
     }
     
     gridSize = (cols, rows) => {
