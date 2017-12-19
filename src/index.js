@@ -15,6 +15,30 @@ class Main extends React.Component {
         }
     }
 
+    selectBox = (row, col) => {
+        let gridCopy = cloneArray(this.state.gridFull);
+        gridCopy[row][col] = !gridCopy[row][col];
+
+        this.setState({
+            gridFull: gridCopy
+        });
+    }
+
+    fill = () => {
+        let gridCopy = cloneArray(this.state.gridFull);
+
+        for(var i = 0; i < this.rows; i++) {
+            for(var j = 0; j < this.cols; j++) {
+                if(Math.floor(Math.random() * 4) === 1)
+                    gridCopy[i][j] = true;
+            }
+        }
+
+        this.setState({
+            gridFull: gridCopy
+        });
+    }
+
     render() {
         return(
             <div>
@@ -33,7 +57,7 @@ class Main extends React.Component {
 
 class Grid extends React.Component {
     render() {
-        const width = this.props.cols * 14;
+        const width = this.props.cols * 16;
         var rowsArray = []
         var boxClass = "";
 
@@ -51,24 +75,36 @@ class Grid extends React.Component {
                         col = {j}
                         selectBox = {this.props.selectBox}
                     />
-                )
+                );
             }
         }
 
         return(
-            <div className="">Content</div>
+            <div className = "grid" style = {{width: width}}>
+                {rowsArray}
+            </div>
         );
     }
 }
 
 class Box extends React.Component {
+    selectBox = () => {
+        this.props.selectBox(this.props.row, this.props.col);
+    }
+
     render() {
         return(
             <div
                 className = {this.props.boxClass}
+                id = {this.props.id}
+                onClick = {this.selectBox}
             />
         );
     }
+}
+
+function cloneArray(arr) {
+    return JSON.parse(JSON.stringify(arr));
 }
 
 ReactDOM.render(<Main />, document.getElementById('root'));
