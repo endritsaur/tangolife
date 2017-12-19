@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import { ButtonToolbar, MenuItem, DropdownButton } from 'react-bootstrap';
 
 class Main extends React.Component {
     constructor() {
@@ -39,6 +40,67 @@ class Main extends React.Component {
         });
     }
 
+    start = () => {
+        clearInterval(this.intervalId);
+        this.intervalId = setInterval(this.play, this.speed);
+    }
+
+    pause = () => {
+        clearInterval(this.intervalId);
+    }
+
+    play = () => {
+        let gridCopy = this.state.gridFull;
+        let gridCopy2 = cloneArray(this.state.gridFull);
+        for(var i = 0; i < this.rows; i++) {
+            for(var j = 0; j < this.cols; j++) {
+                let count = 0;
+
+                if (i > 0)
+                    if (gridCopy[i - 1][j])
+                        count++;
+
+                if (i > 0 && j > 0)
+                    if (gridCopy[i - 1][j - 1])
+                        count++;
+
+                if (i > 0 && j < this.cols - 1)
+                    if (gridCopy[i - 1][j + 1])
+                        count++;
+
+                if (j < this.cols - 1)
+                    if (gridCopy[i][j + 1])
+                        count++;
+
+                if (j > 0)
+                    if (gridCopy[i][j - 1])
+                        count++;
+
+                if (i < this.rows - 1)
+                    if (gridCopy[i + 1][j])
+                        count++;
+
+                if (i < this.rows - 1 && j > 0)
+                    if (gridCopy[i + 1][j - 1])
+                        count++;
+
+                if (i < this.rows - 1 && this.cols - 1)
+                    if (gridCopy[i + 1][j + 1])
+                        count++;
+
+                if (gridCopy[i][j] && (count < 2 || count > 3))
+                    gridCopy2[i][j] = false;
+
+                if (!gridCopy[i][j] && count === 3) gridCopy2[i][j] = true;
+            }
+        }
+
+        this.setState({
+            gridFull: gridCopy2,
+            iteration: this.state.iteration + 1
+        });
+    }
+
     render() {
         return(
             <div>
@@ -57,7 +119,7 @@ class Main extends React.Component {
 
 class Grid extends React.Component {
     render() {
-        const width = this.props.cols * 16;
+        const width = this.props.cols * 14;
         var rowsArray = []
         var boxClass = "";
 

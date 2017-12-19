@@ -22,3 +22,9 @@
 .on {
   background-color: skyblue;
 }
+
+.center {
+  margin: auto;
+  display: table;
+  margin-top: 10px;
+}
